@@ -12,10 +12,10 @@ def main():
 
     elif probe.lower() == "2" or probe.lower() == "seed-based" or probe.lower() == "seed" or probe.lower() == "probablility":
         print("Seed-based probability it is! Check your bracket below!\n")
-        seed.seedBracket()
+        seed.seed_bracket()
 
     elif probe.lower() == "3" or probe.lower() == "random":
         print("Random it is! Check your bracket below!\n")
-        rand.randBracket()
+        rand.rand_bracket()
 
 main()

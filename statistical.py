@@ -1,6 +1,6 @@
 import random
 
-def statsBracket():
+def statsBracket(): 
     sections = ["*SOUTH*", "*MIDWEST*", "*EAST*", "*WEST*"]
     sixteen = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
     eight = [0, 0, 0, 0, 0, 0, 0, 0]

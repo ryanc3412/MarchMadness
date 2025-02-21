@@ -1,112 +1,46 @@
 import random
 
+def rand_bracket():
+    sections = ["SOUTH", "MIDWEST", "EAST", "WEST"]
+    seeds = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
 
-def randBracket():
-    sections = ["*SOUTH*", "*MIDWEST*", "*EAST*", "*WEST*"]
-    sixteen = [1, 16, 8, 9, 5, 12, 4, 13, 6, 11, 3, 14, 7, 10, 2, 15]
-    eight = [0, 0, 0, 0, 0, 0, 0, 0]
-    four = [0, 0, 0, 0]
-    two = [0, 0]
-    winner = [0]
+    rounds = {
+        "First Round": [seeds.copy() for _ in range(4)],
+        "Second Round": [[0] * 8 for _ in range(4)],
+        "Sweet Sixteen": [[0] * 4 for _ in range(4)],
+        "Elite Eight": [[0] * 2 for _ in range(4)],
+        "Final Four": [0] * 4
+    }
+    
+    champion_round = {"Championship": [0] * 2, "Winner": [0]}
 
-    final4 = [0, 0, 0, 0]
+    for i, region in enumerate(sections):
+        print(f"\n\n**{region} Bracket**")
+        simulate_round(rounds["First Round"][i], rounds["Second Round"][i], "First Round")
+        simulate_round(rounds["Second Round"][i], rounds["Sweet Sixteen"][i], "Second Round")
+        simulate_round(rounds["Sweet Sixteen"][i], rounds["Elite Eight"][i], "Sweet Sixteen")
+        simulate_round(rounds["Elite Eight"][i], rounds["Final Four"], "Elite Eight", i)
 
-    for i in range(4):
-        print(sections[i])
-        print("First Round")
-        print("|", end = " ")
+    print("\n**Final Four**")
+    simulate_round(rounds["Final Four"], champion_round["Championship"], "Final Four")
 
-        #print seeds for sixteen and then gets eight
-        for j in range(len(sixteen)):
-            print(sixteen[j], end = " ")
-            if j % 2 == 1:
-                print("|", end = " ")
-        play(sixteen, eight, i)
-        print()
+    print("\n**Championship**")
+    simulate_round(champion_round["Championship"], champion_round["Winner"], "Championship")
 
-        #print seeds for eight and then gets four
-        print("Second Round")
-        for e in range(len(eight)):
-            if e % 2 == 0:
-                print("|", end = " ")
-            else:
-                print("", end = " ")
-            print(eight[e], end = " ")
-            if len(str(eight[e])) == 1:
-                print("", end = "")
-        print("|", end = " ")
-        play(eight, four, i)
-        print()
-
-        #print seeds for four and then gets two
-        print("Sweet Sixteen")
-        for f in range(len(four)):
-            if f % 2 == 1:
-                print("", end = " ")
-            else:
-                print("|", end = " ")
-            print(four[f], end = " ")
-        print("|", end = "")
-        play(four, two, i)
-        print()
-
-        #print seeds for two and then gets final 4 contendant
-        print("Elite Eight")
-        for t in range(len(two)):
-            if t == 0:
-                print("|", two[t], end = " ")
-            else:
-                print(two[t], "|")
-        play(two, final4, i)
-
-        #prints final 4 contendant
-        print("Final 4 Contendant")
-        print("|", final4[i], "|")
-        print("\n")
+    print(f"\n**Champion: {champion_round['Winner'][0]}**")
 
 
-    play(final4, two, 0)
-    print("Final 4")
-    for s in range(len(final4)):
-        if s == 0 or s == 2:
-            print("|", final4[s], end = " ")
-        else:
-            print(final4[s], end = " ")
-    print("|")
-    print()
-
-    play(two, winner, 0)
-    print("\nChampionship")
-    print("|", end = " ")
-    for w in range(len(two)):
-        print(two[w], end = " ")
-    print("|")
-    print()
-
-    print("\nChampion")
-    print("| ", winner[0], " |")
-
-
-def play(now, next, round):
-    num = int(len(now) / 2)
-    pos = 0
-    seed1 = 0
-    seed2 = 1
-
-    for i in range(num):
-        rand = random.randint(1, 2)
-
-        if rand == 1:
-            if len(now) == 2:
-                next[round] = now[seed1]
-            else:
-                next[pos] = now[seed1]
-        else:
-            if len(now) == 2:
-                next[round] = now[seed2]
-            else:
-                next[pos] = now[seed2]
-
-        seed1 += 2
-        seed2 += 2
-        pos += 1
+def simulate_round(current, next_round, round_name, index=None):
+    """Simulates a single round and determines winners."""
+    print(f"\n{round_name}")
+    winners = []
+    for i in range(0, len(current), 2):
+        winner = random.choice([current[i], current[i + 1]])
+        winners.append(winner)
+        print(f"{current[i]} vs {current[i+1]} -> Winner: {winner}")
+    
+    if index is not None:
+        next_round[index] = winners[0]  # Special case for final four
+    else:
+        next_round[:] = winners
+        
